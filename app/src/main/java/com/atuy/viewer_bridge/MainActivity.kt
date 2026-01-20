@@ -51,7 +51,7 @@ class MainActivity : Activity() {
         
         if (hasPaused) {
             Log.d(TAG, "onResume: 待機状態から復帰しました。finish()を実行して元のアプリに戻ります。")
-            finish()
+            moveTaskToBack(true)
             // アニメーションを消す（スムーズに戻るため）
             overridePendingTransition(0, 0)
         }
@@ -83,9 +83,6 @@ class MainActivity : Activity() {
 
             Log.d(TAG, "handleSendText: ブラウザを起動します。URI=$viewerUrl")
             val browserIntent = Intent(Intent.ACTION_VIEW, uri)
-            
-            // ログ確認用：NEW_TASKフラグをあえてつけてみる実験をする場合はコメントアウトを外す
-            browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
             startActivity(browserIntent)
             true
