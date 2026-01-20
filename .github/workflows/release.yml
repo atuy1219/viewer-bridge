@@ -52,7 +52,7 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             TAG_NAME="nightly-$(date +%Y%m%d-%H%M%S)"
-            RELEASE_NAME="Nightly $(date +%Y-%m-%d %H:%M:%S)"
+            RELEASE_NAME="Nightly $(date '+%Y-%m-%d %H:%M:%S')"
             PRERELEASE=true
           else
             TAG_NAME="${GITHUB_REF_NAME}"
