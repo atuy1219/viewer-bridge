@@ -16,9 +16,35 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    val releaseStoreFile = providers.gradleProperty("RELEASE_STORE_FILE")
+        .orElse(providers.environmentVariable("RELEASE_STORE_FILE"))
+        .orNull
+    val releaseStorePassword = providers.gradleProperty("RELEASE_STORE_PASSWORD")
+        .orElse(providers.environmentVariable("RELEASE_STORE_PASSWORD"))
+        .orNull
+    val releaseKeyAlias = providers.gradleProperty("RELEASE_KEY_ALIAS")
+        .orElse(providers.environmentVariable("RELEASE_KEY_ALIAS"))
+        .orNull
+    val releaseKeyPassword = providers.gradleProperty("RELEASE_KEY_PASSWORD")
+        .orElse(providers.environmentVariable("RELEASE_KEY_PASSWORD"))
+        .orNull
+
+    signingConfigs {
+        if (releaseStoreFile != null && releaseStorePassword != null && releaseKeyAlias != null && releaseKeyPassword != null) {
+            create("release") {
+                storeFile = file(releaseStoreFile)
+                storePassword = releaseStorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
