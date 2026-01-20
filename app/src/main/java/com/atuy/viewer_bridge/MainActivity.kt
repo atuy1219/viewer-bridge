@@ -18,10 +18,15 @@ class MainActivity : Activity() {
             if (!handleSendText(intent)) {
                 finish()
             }
-
         } else {
             finish()
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        finish()
+        overridePendingTransition(0, 0)
     }
 
     private fun handleSendText(intent: Intent): Boolean {
@@ -40,9 +45,7 @@ class MainActivity : Activity() {
 
             val browserIntent = Intent(Intent.ACTION_VIEW, uri)
             startActivity(browserIntent)
-            finish() 
-            overridePendingTransition(0, 0)
-            
+        
             true
         } catch (e: Exception) {
             e.printStackTrace()
