@@ -85,7 +85,7 @@ class MainActivity : Activity() {
             val browserIntent = Intent(Intent.ACTION_VIEW, uri)
             
             // ログ確認用：NEW_TASKフラグをあえてつけてみる実験をする場合はコメントアウトを外す
-            // browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
             startActivity(browserIntent)
             true
