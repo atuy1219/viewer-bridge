@@ -16,7 +16,6 @@ class MainActivity : Activity() {
         if (Intent.ACTION_SEND == intent.action && intent.type != null) {
             handleSendText(intent)
         }
-
         finish()
     }
 
@@ -31,9 +30,7 @@ class MainActivity : Activity() {
 
             val viewerUrl = BuildConfig.VIEWER_PREFIX + encodedUrl
 
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(viewerUrl)).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(viewerUrl))
             startActivity(browserIntent)
         } catch (e: Exception) {
             e.printStackTrace()

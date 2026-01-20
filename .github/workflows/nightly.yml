@@ -1,0 +1,44 @@
+name: Nightly Build
+
+on:
+  schedule:
+    # 毎日 日本時間 午前0時 (UTC 15:00) に実行
+    - cron: '0 15 * * *'
+  workflow_dispatch: # 手動実行も可能にする
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew assembleGoogleDebug assembleOfficeDebug
+
+      - name: Upload Google Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-google-debug
+          path: app/build/outputs/apk/google/debug/*.apk
+          retention-days: 7 # 保存期間（任意）
+
+      - name: Upload Office Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-office-debug
+          path: app/build/outputs/apk/office/debug/*.apk
+          retention-days: 7
