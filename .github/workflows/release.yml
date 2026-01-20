@@ -44,7 +44,7 @@ jobs:
         run: ./gradlew --stacktrace assembleGoogleRelease assembleOfficeRelease
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: viewerbridge-release-apks
           path: |
