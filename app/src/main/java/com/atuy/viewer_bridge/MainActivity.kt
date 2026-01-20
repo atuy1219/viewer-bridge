@@ -10,36 +10,54 @@ import java.nio.charset.StandardCharsets
 
 class MainActivity : Activity() {
 
+    private var hasPaused = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (Intent.ACTION_SEND == intent.action && intent.type != null) {
-            handleSendText(intent)
+            val handled = handleSendText(intent)
+            if (!handled) {
+                finish()
+            }
+        } else {
+            finish()
         }
-        finish()
+
     }
 
-    private fun handleSendText(intent: Intent) {
-        val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return
+    override fun onPause() {
+        super.onPause()
+        hasPaused = true
+    }
 
-        val urlString = extractUrl(sharedText) ?: return
+    override fun onResume() {
+        super.onResume()
+        if (hasPaused) {
+            finish()
+        }
+    }
+    private fun handleSendText(intent: Intent): Boolean {
+        val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return false
+        val urlString = extractUrl(sharedText) ?: return false
 
-        try {
-
+        return try {
             val encodedUrl = URLEncoder.encode(urlString, StandardCharsets.UTF_8.toString())
-
             val viewerUrl = BuildConfig.VIEWER_PREFIX + encodedUrl
+            val uri = Uri.parse(viewerUrl)
 
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(viewerUrl))
+            val browserIntent = Intent(Intent.ACTION_VIEW, uri)
+
             startActivity(browserIntent)
+            true
         } catch (e: Exception) {
             e.printStackTrace()
+            false
         }
     }
 
     private fun extractUrl(text: String): String? {
         val matcher = Patterns.WEB_URL.matcher(text)
-
         return if (matcher.find()) {
             matcher.group()
         } else {
