@@ -30,4 +30,6 @@ jobs:
         uses: gradle/actions/wrapper-validation@v4
 
       - name: Run checks
-        run: ./gradlew lint test assembleGoogleDebug assembleOfficeDebug
+        run: |
+          chmod +x gradlew
+          ./gradlew lint test assembleGoogleDebug assembleOfficeDebug
